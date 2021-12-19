@@ -1,0 +1,13 @@
+.ant-layout {
+	height: 100%;
+}
+.header {
+	background-color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	.logo {
+		width: 200px;
+		height: 40px;
+	}
+}
