@@ -1,18 +1,27 @@
-import Drive from '../pages/drive';
-import Car from '../pages/car';
+import UserVoiceAnalysis from '../pages/user-voice-analysis';
+import ReceptionDataManage from '../pages/reception-data-manage';
 
 const mainRouter = [
 	{
 		id: 1,
-		path: '/main',
-		name: '小汽车',
-		component: Car
+		name: '总体分析',
+		icon: 'BarChartOutlined',
+		children: [
+			{
+				id: 1,
+				name: '用户之声分析',
+				path: '/main/user-voice-analysis',
+				icon: 'UsergroupDeleteOutlined',
+				component: UserVoiceAnalysis
+			}
+		]
 	},
 	{
 		id: 2,
-		path: '/main/drive',
-		name: '开车',
-		component: Drive
+		path: '/main/reception-data-manage',
+		name: '接待数据管理',
+		icon: 'DatabaseOutlined',
+		component: ReceptionDataManage
 	}
 ];
 

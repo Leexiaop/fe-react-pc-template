@@ -5,9 +5,22 @@
 	background-color: #fff;
 	display: flex;
 	align-items: center;
-	justify-content: space-around;
+	justify-content: space-between;
 	.logo {
 		width: 200px;
 		height: 40px;
 	}
+	.avatar {
+		margin-right: 16px;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+	}
+}
+.menu {
+	height: 100%;
+}
+.card {
+	height: 100%;
+	overflow: auto;
 }

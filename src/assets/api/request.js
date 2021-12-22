@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { message } from 'antd';
 import _ from 'lodash';
 
 axios.interceptors.request.use((config) => {
-	config.headers.token = 'ddd';
+	config.headers.token = window.localStorage.getItem('token');
 	return config;
 });
 

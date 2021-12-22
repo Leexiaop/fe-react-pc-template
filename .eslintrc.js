@@ -45,6 +45,17 @@ module.exports = {
 		'no-tabs': ['error', { allowIndentationTabs: true }],
 		'max-len': ['error', { code: 180 }],
 		'no-param-reassign': 'off',
-		'global-require': 0
+		'global-require': 0,
+		'jsx-a11y/no-static-element-interactions': [0],
+		'jsx-a11y/click-events-have-key-events': [0],
+		'arrow-body-style': ['warn', 'always'],
+		'jsx-a11y/anchor-is-valid': [0],
+		'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+		'react/forbid-prop-types': 0,
+		'react/no-children-prop': 0,
+		'react/jsx-props-no-spreading': 0,
+		'react/no-this-in-sfc': 0,
+		'react/destructuring-assignment': 0,
+		'arrow-body-style': 0
 	}
 };
