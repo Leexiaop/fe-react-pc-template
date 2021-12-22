@@ -56,6 +56,7 @@ module.exports = {
 		'react/jsx-props-no-spreading': 0,
 		'react/no-this-in-sfc': 0,
 		'react/destructuring-assignment': 0,
-		'arrow-body-style': 0
+		'arrow-body-style': 0,
+		'no-nested-ternary': 0
 	}
 };
