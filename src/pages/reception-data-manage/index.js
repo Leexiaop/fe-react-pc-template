@@ -8,6 +8,8 @@ import {
 } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
+import url from '../../assets/api/url';
+import api from '../../assets/api/api';
 import './index.scss';
 
 const { RangePicker } = DatePicker;
@@ -48,11 +50,10 @@ const columns = [
 
 const ReceptionDataManage = (props) => {
 	const [form] = Form.useForm();
-	console.log(form);
-	const initialValue = {
-		id: 2222,
-		time: [moment('2019/10/15', 'YYYY/MM/DD'), moment('2020/07/16', 'YYYY/MM/DD')]
-	};
+	const [queryData, setQueryData] = useState({
+		id: '',
+		rangeDate: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')]
+	});
 	const onRangePickerChange = (value) => {
 		console.log(value);
 	};
@@ -62,8 +63,8 @@ const ReceptionDataManage = (props) => {
 
 	return (
 		<>
-			<Form form={form} name="horizontal_login" initialValues={initialValue} layout="inline" onFinish={onFinish}>
-				<Form.Item name="time">
+			<Form form={form} name="horizontal_login" initialValues={queryData} layout="inline" onFinish={onFinish}>
+				<Form.Item name="rangeDate">
 					<RangePicker onChange={onRangePickerChange} />
 				</Form.Item>
 				<Form.Item name="id">
