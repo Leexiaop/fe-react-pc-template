@@ -5,7 +5,7 @@ switch (process.env.NODE_ENV) {
 		url = 'http://localweb.baidu.com:8532';
 		break;
 	default:
-		url = `${window.location.href}/api`;
+		url = `${window.location.origin}/api/`;
 }
 export default {
 	login: `${url}user/login`,
