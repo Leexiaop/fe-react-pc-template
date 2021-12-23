@@ -98,21 +98,23 @@ const UserVoiceAnalysis = () => {
 	const [receptionType, setReceptionType] = useState(1);
 	const [commentList, setCommentList] = useState([]);
 	const [form] = Form.useForm();
-	const getCommentData = async () => {
-		const { data } = await api.get(url.getCommentData, {
+
+	const getCommentDataList = async () => {
+		const { data } = await api.get(url.getCommentDataList, {
 			beginDate: moment(queryData.rangeDate[0], dateFormat),
 			endDate: moment(queryData.rangeDate[1], dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
 		});
-		setCommentList([...commentList, ...data.map((item, index) => {
+		setCommentList(data.map((item, index) => {
 			return {
 				key: index,
 				commentText: item.commentText,
-				count: item.count
+				count: item.count,
+				sentiment: item.sentiment
 			};
-		})]);
+		}));
 	};
 	const getIndicatDetail = async () => {
 		const { data } = await api.post(url.getIndicatDetail, {
@@ -220,8 +222,8 @@ const UserVoiceAnalysis = () => {
 		getIndicatChart();
 	}, [indicatType, queryData]);
 	useDeepCompareEffect(() => {
-		getCommentData();
-	}, [indicatType, queryData]);
+		getCommentDataList();
+	}, [queryData]);
 	const onFinish = (values) => {
 		setQueryData({ ...queryData, ...values });
 	};
@@ -247,7 +249,6 @@ const UserVoiceAnalysis = () => {
 			type="primary"
 			size="small"
 			onClick={(event) => {
-				// If you don't want click extra trigger collapse, you can prevent this:
 				event.stopPropagation();
 			}}
 		>
@@ -333,7 +334,7 @@ const UserVoiceAnalysis = () => {
 							{
 								commentList.map((comment) => {
 									return (
-										<Button type="primary" key={comment.key}>
+										<Button type={comment.sentiment === 2 ? 'primary' : (comment.sentiment === 0 ? 'danger' : '')} key={comment.key}>
 											{
 												comment.commentText
 											}
