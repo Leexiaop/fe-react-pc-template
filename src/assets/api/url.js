@@ -2,7 +2,7 @@
 let url = window.location.href;
 switch (process.env.NODE_ENV) {
 	case 'development':
-		url = 'http://localweb.baidu.com:8532';
+		url = 'http://localweb.baidu.com/api';
 		break;
 	default:
 		url = `${window.location.origin}/api/`;
@@ -13,5 +13,6 @@ export default {
 	getReceptionDataList: `${url}/receptionVolume/list`,
 	getReceptionChart: `${url}/receptionVolume/charts`,
 	getIndicatChart: `${url}/indicatorsMentioned/charts`,
-	getIndicatDetail: `${url}/indicatorsMentioned/detail`
+	getIndicatDetail: `${url}/indicatorsMentioned/detail`,
+	getCommentData: `${url}/comment/analysis`
 };

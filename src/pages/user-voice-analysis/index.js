@@ -9,10 +9,11 @@ import {
 	Tabs,
 	Collapse,
 	Table,
-	Empty
+	Empty,
+	Space
 } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import moment from 'moment';
 import * as echarts from 'echarts';
 import url from '../../assets/api/url';
@@ -87,7 +88,6 @@ const UserVoiceAnalysis = () => {
 	const [queryData, setQueryData] = useState({
 		rangeType: 'day',
 		rangeDate: [moment(moment(), dateFormat), moment(moment(), dateFormat)],
-		id: '',
 		userInfo: ''
 	});
 	const [isReception, setIsReception] = useState(false);
@@ -95,11 +95,29 @@ const UserVoiceAnalysis = () => {
 	const [dataList, setDataList] = useState([]);
 	const [total, setTotal] = useState(0);
 	const [indicatType, setIndicatType] = useState(1);
+	const [receptionType, setReceptionType] = useState(1);
+	const [commentList, setCommentList] = useState([]);
 	const [form] = Form.useForm();
+	const getCommentData = async () => {
+		const { data } = await api.get(url.getCommentData, {
+			beginDate: moment(queryData.rangeDate[0], dateFormat),
+			endDate: moment(queryData.rangeDate[1], dateFormat),
+			type: queryData.rangeType,
+			businessType: indicatType,
+			userInfo: queryData.userInfo
+		});
+		setCommentList([...commentList, ...data.map((item, index) => {
+			return {
+				key: index,
+				commentText: item.commentText,
+				count: item.count
+			};
+		})]);
+	};
 	const getIndicatDetail = async () => {
 		const { data } = await api.post(url.getIndicatDetail, {
 			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[0], dateFormat),
+			endDate: moment(queryData.rangeDate[1], dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
@@ -117,16 +135,19 @@ const UserVoiceAnalysis = () => {
 				totalCount: result.totalCount,
 				key: index
 			};
-		}));
+		}) || []);
 	};
 	const getIndicatChart = async () => {
 		const { data } = await api.post(url.getIndicatChart, {
 			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[0], dateFormat),
+			endDate: moment(queryData.rangeDate[1], dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
 		});
+		setIndicat(!data.data.length);
+		getIndicatDetail();
+		if (!data.data.length) return;
 		const myChart = echarts.init(document.getElementById('indicat'));
 		const option = {
 			dataset: {
@@ -162,17 +183,17 @@ const UserVoiceAnalysis = () => {
 			]
 		};
 		myChart.setOption(option, true);
-		setIndicat(!data.data.length);
-		getIndicatDetail();
 	};
 	const getReceptionChart = async () => {
 		const { data } = await api.post(url.getReceptionChart, {
 			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[0], dateFormat),
+			endDate: moment(queryData.rangeDate[1], dateFormat),
 			type: queryData.rangeType,
-			businessType: 1,
+			businessType: receptionType,
 			userInfo: queryData.userInfo
 		});
+		setIsReception(!data.x.length && !data.y.length);
+		if (!data.x.length && !data.y.length) return;
 		const myChart = echarts.init(document.getElementById('reception'));
 		const option = {
 			xAxis: {
@@ -191,29 +212,48 @@ const UserVoiceAnalysis = () => {
 			]
 		};
 		myChart.setOption(option, true);
-		setIsReception(!data.x.length && !data.y.length);
 	};
-	useEffect(() => {
+	useDeepCompareEffect(() => {
 		getReceptionChart();
-	}, []);
-	useEffect(() => {
+	}, [receptionType, queryData]);
+	useDeepCompareEffect(() => {
 		getIndicatChart();
-	}, []);
+	}, [indicatType, queryData]);
+	useDeepCompareEffect(() => {
+		getCommentData();
+	}, [indicatType, queryData]);
 	const onFinish = (values) => {
-		console.log('Finish:', values);
+		setQueryData({ ...queryData, ...values });
+	};
+	const onReset = () => {
+		setQueryData({
+			...queryData,
+			...{
+				rangeType: 'day',
+				rangeDate: [moment(moment(), dateFormat), moment(moment(), dateFormat)],
+				userInfo: ''
+			}
+		});
+		form.resetFields();
 	};
 	const onIndicatTabChange = (value) => {
 		setIndicatType(Number(value));
-		getIndicatChart();
 	};
-	const genExtra = () => {
-		<SettingOutlined
+	const onReceptionTabChnage = (value) => {
+		setReceptionType(Number(value));
+	};
+	const genExtra = () => (
+		<Button
+			type="primary"
+			size="small"
 			onClick={(event) => {
 				// If you don't want click extra trigger collapse, you can prevent this:
 				event.stopPropagation();
 			}}
-		/>;
-	};
+		>
+			导出
+		</Button>
+	);
 
 	return (
 		<>
@@ -226,16 +266,16 @@ const UserVoiceAnalysis = () => {
 					</Select>
 				</Form.Item>
 				<Form.Item name="rangeDate">
-					<RangePicker format={dateFormat} />
+					<RangePicker format={dateFormat} allowClear={false} />
 				</Form.Item>
-				<Form.Item name="id">
+				<Form.Item name="userInfo">
 					<Input placeholder="输入体验官ID进行搜索" />
 				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit">搜索</Button>
 				</Form.Item>
 				<Form.Item>
-					<Button type="primary" htmlType="button">刷新</Button>
+					<Button type="primary" htmlType="button" onClick={onReset}>刷新</Button>
 				</Form.Item>
 			</Form>
 			<Divider />
@@ -244,13 +284,13 @@ const UserVoiceAnalysis = () => {
 					<blockquote>接待量统计</blockquote>
 				</Title>
 				<Paragraph>
-					<Tabs defaultActiveKey="1">
-						<TabPane tab="时间维度" key="1" />
-						<TabPane tab="人员纬度" key="2" />
+					<Tabs defaultActiveKey={receptionType} onChange={onReceptionTabChnage}>
+						<TabPane tab="时间维度" key={1} />
+						<TabPane tab="人员纬度" key={2} />
 					</Tabs>
 					<pre>
 						{
-							isReception ? <Empty /> : <div id="reception" style={{ width: '100%', height: '500px' }} />
+							isReception ? <Empty description={<>暂无数据</>} /> : <div id="reception" style={{ width: '100%', height: '500px' }} />
 						}
 					</pre>
 				</Paragraph>
@@ -265,7 +305,7 @@ const UserVoiceAnalysis = () => {
 					</Tabs>
 					<pre>
 						{
-							isIndicat ? <Empty /> : <div id="indicat" style={{ width: '100%', height: '500px' }} />
+							isIndicat ? <Empty description={<>暂无数据</>} /> : <div id="indicat" style={{ width: '100%', height: '500px' }} />
 						}
 					</pre>
 					<Collapse>
@@ -288,7 +328,26 @@ const UserVoiceAnalysis = () => {
 					<blockquote>用户评论</blockquote>
 				</Title>
 				<Paragraph>
-					<pre>blockContent</pre>
+					<pre>
+						<Space size={[8, 16]} wrap>
+							{
+								commentList.map((comment) => {
+									return (
+										<Button type="primary" key={comment.key}>
+											{
+												comment.commentText
+											}
+											(
+											{
+												comment.count
+											}
+											)
+										</Button>
+									);
+								})
+							}
+						</Space>
+					</pre>
 				</Paragraph>
 			</Typography>
 		</>
