@@ -66,8 +66,8 @@ class API {
 		let errorData = null;
 		const res = await api({
 			url,
-			method: 'get',
-			params,
+			method: 'post',
+			data: params,
 			...options
 		}).catch((error) => {
 			errorData = error;

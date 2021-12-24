@@ -40,7 +40,7 @@ const Main = () => {
 	return (
 		<Layout>
 			<Header className="header">
-				<img className="logo" src={require('../../assets/images/logo.svg')} alt="" />
+				<img className="logo" src={require('../../assets/images/logo.png').default} alt="" />
 				<Dropdown overlay={menu}>
 					<a className="ant-dropdown-link" onClick={(e) => { e.preventDefault(); }}>
 						{username}
@@ -82,7 +82,7 @@ const Main = () => {
 						}
 					</Menu>
 				</Sider>
-				<Content style={{ margin: '24px' }}>
+				<Content style={{ margin: 24 }}>
 					<Card className="card">
 						<Switch>
 							{

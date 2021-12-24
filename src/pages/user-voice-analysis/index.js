@@ -1,6 +1,5 @@
 import {
 	Form,
-	Input,
 	Button,
 	Select,
 	DatePicker,
@@ -10,7 +9,8 @@ import {
 	Collapse,
 	Table,
 	Empty,
-	Space
+	Space,
+	Tag
 } from 'antd';
 import { useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -87,9 +87,10 @@ const columns = [
 const UserVoiceAnalysis = () => {
 	const [queryData, setQueryData] = useState({
 		rangeType: 'day',
-		rangeDate: [moment(moment(), dateFormat), moment(moment(), dateFormat)],
-		userInfo: ''
+		rangeDate: [moment(moment(moment().startOf('month').format(dateFormat)), dateFormat), moment(moment(), dateFormat)],
+		userInfo: undefined
 	});
+	const [userList, setUserList] = useState([]);
 	const [isReception, setIsReception] = useState(false);
 	const [isIndicat, setIndicat] = useState(false);
 	const [dataList, setDataList] = useState([]);
@@ -101,8 +102,8 @@ const UserVoiceAnalysis = () => {
 
 	const getCommentDataList = async () => {
 		const { data } = await api.get(url.getCommentDataList, {
-			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[1], dateFormat),
+			beginDate: moment(queryData.rangeDate[0]).format(dateFormat),
+			endDate: moment(queryData.rangeDate[1]).format(dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
@@ -118,8 +119,8 @@ const UserVoiceAnalysis = () => {
 	};
 	const getIndicatDetail = async () => {
 		const { data } = await api.post(url.getIndicatDetail, {
-			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[1], dateFormat),
+			beginDate: moment(queryData.rangeDate[0]).format(dateFormat),
+			endDate: moment(queryData.rangeDate[1]).format(dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
@@ -141,8 +142,8 @@ const UserVoiceAnalysis = () => {
 	};
 	const getIndicatChart = async () => {
 		const { data } = await api.post(url.getIndicatChart, {
-			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[1], dateFormat),
+			beginDate: moment(queryData.rangeDate[0]).format(dateFormat),
+			endDate: moment(queryData.rangeDate[1]).format(dateFormat),
 			type: queryData.rangeType,
 			businessType: indicatType,
 			userInfo: queryData.userInfo
@@ -188,8 +189,8 @@ const UserVoiceAnalysis = () => {
 	};
 	const getReceptionChart = async () => {
 		const { data } = await api.post(url.getReceptionChart, {
-			beginDate: moment(queryData.rangeDate[0], dateFormat),
-			endDate: moment(queryData.rangeDate[1], dateFormat),
+			beginDate: moment(queryData.rangeDate[0]).format(dateFormat),
+			endDate: moment(queryData.rangeDate[1]).format(dateFormat),
 			type: queryData.rangeType,
 			businessType: receptionType,
 			userInfo: queryData.userInfo
@@ -232,8 +233,8 @@ const UserVoiceAnalysis = () => {
 			...queryData,
 			...{
 				rangeType: 'day',
-				rangeDate: [moment(moment(), dateFormat), moment(moment(), dateFormat)],
-				userInfo: ''
+				rangeDate: [moment(moment(moment().startOf('month').format(dateFormat)), dateFormat), moment(moment(), dateFormat)],
+				userInfo: undefined
 			}
 		});
 		form.resetFields();
@@ -255,7 +256,10 @@ const UserVoiceAnalysis = () => {
 			导出
 		</Button>
 	);
-
+	const onSearch = async () => {
+		const { data } = await api.get(url.getUserList);
+		setUserList(data);
+	};
 	return (
 		<>
 			<Form form={form} name="horizontal_login" initialValues={queryData} layout="inline" onFinish={onFinish}>
@@ -270,7 +274,20 @@ const UserVoiceAnalysis = () => {
 					<RangePicker format={dateFormat} allowClear={false} />
 				</Form.Item>
 				<Form.Item name="userInfo">
-					<Input placeholder="输入体验官ID进行搜索" />
+					<Select
+						showSearch
+						placeholder="输入体验官姓名进行搜索"
+						style={{ width: 200 }}
+						optionFilterProp="children"
+						onFocus={onSearch}
+						filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+					>
+						{
+							userList.length && userList.map((user) => {
+								return <Option value={user.id} key={user.id}>{user.userName}</Option>;
+							})
+						}
+					</Select>
 				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit">搜索</Button>
@@ -287,11 +304,11 @@ const UserVoiceAnalysis = () => {
 				<Paragraph>
 					<Tabs defaultActiveKey={receptionType} onChange={onReceptionTabChnage}>
 						<TabPane tab="时间维度" key={1} />
-						<TabPane tab="人员纬度" key={2} />
+						<TabPane tab="人员维度" key={2} />
 					</Tabs>
 					<pre>
 						{
-							isReception ? <Empty description={<>暂无数据</>} /> : <div id="reception" style={{ width: '100%', height: '500px' }} />
+							isReception ? <Empty description={<>暂无数据</>} /> : <div id="reception" style={{ width: '100%', height: 500 }} />
 						}
 					</pre>
 				</Paragraph>
@@ -306,7 +323,7 @@ const UserVoiceAnalysis = () => {
 					</Tabs>
 					<pre>
 						{
-							isIndicat ? <Empty description={<>暂无数据</>} /> : <div id="indicat" style={{ width: '100%', height: '500px' }} />
+							isIndicat ? <Empty description={<>暂无数据</>} /> : <div id="indicat" style={{ width: '100%', height: 500 }} />
 						}
 					</pre>
 					<Collapse>
@@ -318,6 +335,7 @@ const UserVoiceAnalysis = () => {
 							<Table
 								pagination={false}
 								bordered
+								locale={{ emptyText: '暂无数据' }}
 								columns={columns.filter((column) => !column.indicatType || column.indicatType === indicatType)}
 								dataSource={dataList}
 								title={() => <div style={{ textAlign: 'center' }}>{ indicatType === 1 ? '正面提及指标' : (indicatType === 2 ? '负面提及指标' : '综合满意度')}</div>}
@@ -334,7 +352,7 @@ const UserVoiceAnalysis = () => {
 							{
 								commentList.map((comment) => {
 									return (
-										<Button type={comment.sentiment === 2 ? 'primary' : (comment.sentiment === 0 ? 'danger' : '')} key={comment.key}>
+										<Tag color={comment.sentiment === 2 ? '#87d068' : (comment.sentiment === 0 ? '#f50' : 'lime')} key={comment.key}>
 											{
 												comment.commentText
 											}
@@ -343,7 +361,7 @@ const UserVoiceAnalysis = () => {
 												comment.count
 											}
 											)
-										</Button>
+										</Tag>
 									);
 								})
 							}

@@ -43,7 +43,7 @@ module.exports = {
 		'react/jsx-filename-extension': 'off',
 		'react/jsx-indent': ['error', 'tab'],
 		'no-tabs': ['error', { allowIndentationTabs: true }],
-		'max-len': ['error', { code: 180 }],
+		'max-len': ['error', { code: 2000 }],
 		'no-param-reassign': 'off',
 		'global-require': 0,
 		'jsx-a11y/no-static-element-interactions': [0],
