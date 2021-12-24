@@ -284,7 +284,7 @@ const UserVoiceAnalysis = () => {
 					>
 						{
 							userList.length && userList.map((user) => {
-								return <Option value={user.id} key={user.id}>{user.userName}</Option>;
+								return <Option value={user.userCode} key={user.id}>{user.userName}</Option>;
 							})
 						}
 					</Select>

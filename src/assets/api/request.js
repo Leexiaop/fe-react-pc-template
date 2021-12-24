@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -7,6 +8,11 @@ axios.interceptors.request.use((config) => {
 });
 
 axios.interceptors.response.use((response) => {
+	if (response.data.code === 201) {
+		message.warning('请重新登录！');
+		window.localStorage.clear();
+		window.location.href = window.location.origin;
+	}
 	return response;
 }, (error) => {
 	Promise.reject(error);
