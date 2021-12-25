@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useRecoilValue } from 'recoil';
 import {
 	Link,
 	Switch,
@@ -13,21 +14,16 @@ import {
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import * as Icon from '@ant-design/icons';
+import { userState } from '../../recoil/selector';
 import mainRouter from '../../router/main';
-import url from '../../assets/api/url';
-import api from '../../assets/api/api';
 import './index.scss';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const Main = () => {
+	const userInfo = useRecoilValue(userState);
 	const history = useHistory();
-	const [username, setUsername] = useState('xiao');
-	useEffect(async () => {
-		const { data } = await api.get(url.getUserinfo);
-		setUsername(data.userName);
-	}, []);
 	const onClick = () => {
 		window.localStorage.removeItem('token');
 		history.push('/');
@@ -43,14 +39,14 @@ const Main = () => {
 				<img className="logo" src={require('../../assets/images/logo.png').default} alt="" />
 				<Dropdown overlay={menu}>
 					<a className="ant-dropdown-link" onClick={(e) => { e.preventDefault(); }}>
-						{username}
+						{userInfo.userName}
 						<DownOutlined />
 					</a>
 				</Dropdown>
 			</Header>
 			<Layout>
 				<Sider>
-					<Menu theme="light" mode="inline" className="menu" defaultSelectedKeys={['1']} defaultOpenKeys={[['sub1']]}>
+					<Menu theme="light" mode="inline" className="menu" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
 						{
 							mainRouter.map((route) => {
 								const icon = React.createElement(Icon[route.icon]);

@@ -31,34 +31,7 @@ const { Column } = Table;
 const { Paragraph } = Typography;
 const { TabPane } = Tabs;
 const { Option } = Select;
-const colorList = [
-	'#73EB7C',
-	'#FFE34B',
-	'#00FDFF',
-	'#36B5FF',
-	'#00FDFF',
-	'#73EB7C',
-	'#36B5FF',
-	'#FFE34B'
-];
-const lists = [
-	{
-		name: '孟加拉帕德玛大桥',
-		value: 80
-	},
-	{
-		name: '澳大利亚新法',
-		value: 80
-	},
-	{
-		name: '高分十四号卫星',
-		value: 80
-	},
-	{
-		name: '关键词云的实现',
-		value: 80
-	}
-];
+
 const ReceptionDataManage = () => {
 	const [queryData, setQueryData] = useState({
 		recordUserCode: undefined,

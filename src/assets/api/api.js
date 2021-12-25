@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import api from './request';
+import { api } from './request';
 
 /**
  * $api 具体实现方法

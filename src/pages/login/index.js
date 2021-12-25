@@ -19,13 +19,10 @@ const Login = () => {
 		if (code === 0) {
 			message.success('登录成功!');
 			window.localStorage.setItem('token', data.token);
-			history.push('/main');
+			history.push('/main/user-voice-analysis');
 			return;
 		}
 		message.warning(msg);
-	};
-	const onFinishFailed = (errorInfo) => {
-		console.log('Failed:', errorInfo);
 	};
 	return (
 		<div className="login">
@@ -36,7 +33,6 @@ const Login = () => {
 					wrapperCol={{ span: 16 }}
 					initialValues={{ remember: true }}
 					onFinish={onFinish}
-					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 				>
 					<Form.Item

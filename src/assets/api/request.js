@@ -9,40 +9,31 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use((response) => {
 	if (response.data.code === 201) {
-		message.warning('请重新登录！');
+		message.warning(response.data.msg, 5);
 		window.localStorage.clear();
-		window.location.href = window.location.origin;
+		window.location.href = '/';
+		return false;
 	}
 	return response;
 }, (error) => {
+	message.warning('哎呀，出错了～～', 5);
 	Promise.reject(error);
 });
 
-export default async function api(config) {
-	const time = Date.now();
-	const res = await axios(config).catch((e) => {
-		throw e;
+export const api = (config) => {
+	return new Promise((resolve, reject) => {
+		axios(config).then((res) => {
+			if (res) {
+				if (config.responseType === 'blob') {
+					resolve(res);
+				} else {
+					resolve(res.data);
+				}
+			} else {
+				reject(new Error());
+			}
+		}).catch((error) => {
+			reject(error);
+		});
 	});
-
-	if (config.responseType === 'blob') { return res; }
-
-	let styleText = 'background: green;color: white;';
-	let formatText = `%c 👍👍 ${config.method}::${config.url} $ `;
-	if (res.data.code === 1) {
-		styleText = 'background: red;color: white;';
-		formatText = `%c 🐛🐛 ${config.method}::${config.url} $ `;
-	}
-	const tipInfo = {
-		data: config.data || config.params || '@@',
-		response: res.data,
-		code: res.data.code,
-		msg: res.data.msg,
-		timing: Date.now() - time
-	};
-
-	// log
-	console.log('\r\n');
-	console.log(formatText, styleText, tipInfo?.response?.data);
-
-	return res.data;
-}
+};
