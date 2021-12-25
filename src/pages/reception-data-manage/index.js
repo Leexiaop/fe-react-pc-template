@@ -253,12 +253,24 @@ const ReceptionDataManage = () => {
 							<Space align="start">
 								<Row gutter={16}>
 									<Col span={8}>
-										<Card title="基础信息">
-											<div id="wordCloud" style={{ width: '100%', height: 500 }} />
+										<Card title="基础信息" bodyStyle={{ maxHeight: 500, overflowY: 'auto' }}>
+											<p>
+												录音文件ID:
+												{recordDetail.recordCode}
+											</p>
+											<p>
+												录音时间:
+												{recordDetail.recordStartTime}
+											</p>
+											<p>
+												通话时长:
+												{recordDetail.durationTime}
+											</p>
+											<div id="wordCloud" style={{ width: '100%', height: 360 }} />
 										</Card>
 									</Col>
 									<Col span={8}>
-										<Card title="ASR结果(录音识别结果)" bodyStyle={{ height: 500, overflowY: 'auto' }}>
+										<Card title="ASR结果(录音识别结果)" bodyStyle={{ maxHeight: 500, overflowY: 'auto' }}>
 											<List
 												split={false}
 												dataSource={recordDetail.asrResult}
@@ -274,7 +286,7 @@ const ReceptionDataManage = () => {
 																}}
 																>
 																	<Typography>
-																		<Space>
+																		<Space align="start">
 																			<Avatar src={<Image src={require('../../assets/images/adverse.jpeg').default} />} />
 																			<pre style={{ textAlign: 'left' }}>{item.originalContent}</pre>
 																		</Space>
@@ -289,7 +301,7 @@ const ReceptionDataManage = () => {
 																}}
 																>
 																	<Typography>
-																		<Space>
+																		<Space align="start">
 																			<pre style={{ textAlign: 'left' }}>{item.originalContent}</pre>
 																			<Avatar src={<Image src={require('../../assets/images/me.jpeg').default} />} />
 																		</Space>
@@ -303,7 +315,7 @@ const ReceptionDataManage = () => {
 										</Card>
 									</Col>
 									<Col span={8}>
-										<Card title="NLP结果(录音解析结果)">
+										<Card title="NLP结果(录音解析结果)" bodyStyle={{ maxHeight: 500, overflowY: 'auto' }}>
 											<Tabs defaultActiveKey="1">
 												<TabPane tab="指标命中分析" key="1">
 													<Table
