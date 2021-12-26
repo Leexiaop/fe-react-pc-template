@@ -1,5 +1,4 @@
-import UserVoiceAnalysis from '../pages/user-voice-analysis';
-import ReceptionDataManage from '../pages/reception-data-manage';
+import { lazy } from 'react';
 
 const mainRouter = [
 	{
@@ -12,7 +11,7 @@ const mainRouter = [
 				name: '用户之声分析',
 				path: '/main/user-voice-analysis',
 				icon: 'UsergroupDeleteOutlined',
-				component: UserVoiceAnalysis
+				component: lazy(() => import('../pages/user-voice-analysis'))
 			}
 		]
 	},
@@ -21,7 +20,7 @@ const mainRouter = [
 		path: '/main/reception-data-manage',
 		name: '接待数据管理',
 		icon: 'DatabaseOutlined',
-		component: ReceptionDataManage
+		component: lazy(() => import('../pages/reception-data-manage'))
 	}
 ];
 

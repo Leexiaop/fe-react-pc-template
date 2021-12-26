@@ -1,18 +1,17 @@
-import Login from '../pages/login';
-import Main from '../pages/main';
+import { lazy } from 'react';
 
 const routers = [
 	{
 		id: 1,
 		path: '/',
 		exact: true,
-		component: Login
+		component: lazy(() => import('../pages/login'))
 	},
 	{
 		id: 2,
 		exact: false,
 		path: '/main',
-		component: Main
+		component: lazy(() => import('../pages/main'))
 	}
 ];
 
