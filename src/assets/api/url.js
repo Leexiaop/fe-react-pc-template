@@ -22,6 +22,7 @@ export default {
 	getIndicatChart: `${url}/indicatorsMentioned/charts`,
 	getIndicatDetail: `${url}/indicatorsMentioned/detail`,
 	getCommentDataList: `${url}/comment/analysis`,
+	expectReceptionDetail: `${url}/indicatorsMentioned/export`,
 	/**
 	 * 接待数据统计
 	 */

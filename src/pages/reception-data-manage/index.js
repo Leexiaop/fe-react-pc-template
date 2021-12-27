@@ -66,7 +66,8 @@ const ReceptionDataManage = () => {
 				recordStartTime: res.recordStartTime,
 				recordEndTime: res.recordEndTime,
 				recordUrl: res.recordUrl,
-				recordCode: res.recordCode
+				recordCode: res.recordCode,
+				recordUserName: res.recordUserName
 			};
 		}));
 	};
@@ -213,6 +214,7 @@ const ReceptionDataManage = () => {
 				<Column title="序号" dataIndex="key" key="key" align="center" />
 				<Column title="接待日期" dataIndex="recordTime" key="recordTime" align="center" />
 				<Column title="体验官ID" dataIndex="recordUserCode" key="recordUserCode" align="center" />
+				<Column title="体验官姓名" dataIndex="recordUserName" key="recordUserName" align="center" />
 				<Column title="接待时长" dataIndex="durationTime" key="durationTime" align="center" />
 				<Column title="录音开始时间" dataIndex="recordStartTime" key="recordStartTime" align="center" />
 				<Column title="录音结束时间" dataIndex="recordEndTime" key="recordEndTime" align="center" />

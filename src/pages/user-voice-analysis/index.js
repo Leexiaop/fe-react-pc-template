@@ -166,9 +166,7 @@ const UserVoiceAnalysis = () => {
 				show: false,
 				orient: 'horizontal',
 				left: 'center',
-				min: 10,
-				max: 100,
-				text: ['最高', '最低'],
+				text: ['High Score', 'Low Score'],
 				dimension: 0,
 				inRange: {
 					color: ['#65B581', '#FFCE34', '#FD665F']
@@ -249,8 +247,15 @@ const UserVoiceAnalysis = () => {
 		<Button
 			type="primary"
 			size="small"
-			onClick={(event) => {
+			onClick={async (event) => {
 				event.stopPropagation();
+				await api.download(url.expectReceptionDetail, {
+					beginDate: moment(queryData.rangeDate[0]).format(dateFormat),
+					endDate: moment(queryData.rangeDate[1]).format(dateFormat),
+					type: queryData.rangeType,
+					businessType: receptionType,
+					userInfo: queryData.userInfo
+				});
 			}}
 		>
 			导出
