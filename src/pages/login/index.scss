@@ -3,14 +3,11 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    background: url('../../assets/images/login_bg.png') no-repeat;
+    background: url('../../assets/images/bg.jpg') no-repeat;
     background-size: 100% 100%;
     .content {
         width: 30%;
         margin-right: 20%;
         margin-top: 20%;
-        label {
-            color: #fff;
-        }
     }
 }
